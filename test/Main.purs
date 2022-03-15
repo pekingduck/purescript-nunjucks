@@ -1,11 +1,16 @@
 module Test.Main where
 
 import Prelude
-
 import Effect (Effect)
-import Effect.Class.Console (log)
+import Effect.Console (log)
+import Nunjucks.Environment (makeEnvironment, render, defaultEnvironmentOpts)
+import Nunjucks.Loader (defaultFileSystemLoaderOpts, Loader(..))
 
 main :: Effect Unit
 main = do
-  log "🍝"
-  log "You should add some tests."
+  let
+    fileLoader = FileSystemLoader [ ".", "inc" ] defaultFileSystemLoaderOpts
+
+    env = makeEnvironment [ fileLoader ] defaultEnvironmentOpts
+  res <- render env "tmpl.html" { a: { id: 99999 } }
+  log res
